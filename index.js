@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin / env node
 import { execSync } from "child_process";
 import { simpleGit } from "simple-git";
 import inquirer from "inquirer";
@@ -23,35 +23,52 @@ async function run() {
 
   console.log(chalk.green("Cloning the repository..."));
   await git.clone(
-    "https://github.com/your-username/my-monorepo.git",
-    projectName,
+    "https://github.com/ScaffoldEssential/scaffold-essential.git",
+    projectName
   );
 
   console.log(chalk.green("Installing frontend dependencies..."));
-  execSync("yarn install", {
+  execSync("npm install", {
     cwd: `${projectName}/frontend`,
     stdio: "inherit",
   });
 
   console.log(chalk.green("Installing backend dependencies..."));
-  execSync("rustup update", {
+  execSync("rustup update", { stdio: "inherit" });
+  execSync("cargo install essential-builder", {
     cwd: `${projectName}/backend`,
     stdio: "inherit",
   });
 
-  console.log(chalk.yellow("Setting up scripts..."));
-  const pmConfig = `
-    {
-        "scripts": {
-            "start-next": "cd frontend && yarn dev",
-            "start-rust": "cd backend && cargo run",
-            "start-all": "concurrently \\"yarn start-next\\" \\"yarn start-rust\\""
-        }
-    }`;
-  fs.writeFileSync(`${projectName}/package.json`, pmConfig);
+  console.log(chalk.green("Setting up project scripts..."));
+  const pmConfig = {
+    name: "pint-nextjs",
+    version: "1.0.0",
+    description: "",
+    main: "index.js",
+    scripts: {
+      dev: "cd frontend && npm run dev",
+      build: "cd frontend && npm run build",
+      compile: "cd backend && pint build",
+      chain: "cd backend && RUST_LOG=trace essential-builder --node-api-bind-address '0.0.0.0:3553' --builder-api-bind-address '0.0.0.0:3554'",
+      shell: "cd backend && nix shell github:essential-contributions/essential-integration#essential",
+      generate: "cd frontend && npm run scripts",
+    },
+    author: "Bhavya Gor & Kenil Shah",
+    license: "ISC",
+  };
+
+  fs.writeFileSync(
+    `${projectName}/package.json`,
+    JSON.stringify(pmConfig, null, 2)
+  );
 
   console.log(chalk.green("All done! 🎉"));
   console.log(chalk.blue(`Your project is ready at ${projectName}.`));
+  console.log(chalk.green("To get started:"));
+  console.log(chalk.yellow(`  cd ${projectName}`));
+  console.log(chalk.yellow(`  npm run dev`));
 }
 
 run().catch((err) => console.error(chalk.red(err)));
+
