@@ -1,4 +1,4 @@
-#!/usr/bin / env node
+#!/usr/bin/env node
 import { execSync } from "child_process";
 import { simpleGit } from "simple-git";
 import inquirer from "inquirer";
