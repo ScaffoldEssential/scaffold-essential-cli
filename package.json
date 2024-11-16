@@ -1,6 +1,6 @@
 {
   "name": "scaffold-essential-cli",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "index.js",
   "bin": {
     "create-essential": "./index.js"
