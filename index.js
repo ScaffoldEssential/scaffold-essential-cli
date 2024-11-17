@@ -35,6 +35,11 @@ async function run() {
 
   console.log(chalk.green("Installing backend dependencies..."));
   execSync("rustup update", { stdio: "inherit" });
+  execSync(
+    "curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install",
+  );
+  execSync("nix develop github:essential-contributions/essential-integration");
+  execSync("cargo install pint-cli", { stdio: "inherit" });
 
   console.log(chalk.green("Setting up project scripts..."));
   const pmConfig = {
